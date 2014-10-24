@@ -2,13 +2,16 @@ package validator
 
 import "encoding/hex"
 
-type ObjectId struct {
+// ObjectID ... check objectID
+type ObjectID struct {
 }
 
-type ObjectIdIfNotEmpty struct {
+// ObjectIDIfNotEmpty ... check objectID if not empty
+type ObjectIDIfNotEmpty struct {
 }
 
-func (o ObjectId) Validate(param string) bool {
+// Validate ... validate param of objectID
+func (o ObjectID) Validate(param string) bool {
 
 	if len(param) != 24 {
 		return false
@@ -17,7 +20,8 @@ func (o ObjectId) Validate(param string) bool {
 	return err == nil
 }
 
-func (o ObjectIdIfNotEmpty) Validate(param string) bool {
+// Validate ... validate param of objectID if not empty
+func (o ObjectIDIfNotEmpty) Validate(param string) bool {
 
 	if param == "" {
 		return true

@@ -18,7 +18,7 @@ func ValidatePathParam(name string, vs ...Validator) gin.HandlerFunc {
 	}
 }
 
-// ValidatePathParam ... validate for request parameter
+// ValidateRequestParam ... validate for request parameter
 func ValidateRequestParam(name string, vs ...Validator) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		for _, v := range vs {
