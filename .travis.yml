@@ -12,7 +12,8 @@ install:
   - go get github.com/gin-gonic/gin
 
 script:
-  - go test -v -coverprofile=coverage.txt -covermode=count ./...
+  - go test -v -coverprofile=coverage.txt -covermode=count ./validation/validator
 
 after_success:
   - codecov
+
