@@ -7,9 +7,9 @@ before_install:
   - sudo pip install codecov
 
 install:
-- go get code.google.com/p/go.tools/cmd/cover
-- go get github.com/smartystreets/goconvey
-- go get github.com/gin-gonic/gin
+  - go get code.google.com/p/go.tools/cmd/cover
+  - go get github.com/smartystreets/goconvey
+  - go get github.com/gin-gonic/gin
 
 script:
   - go test github.com/dogenzaka/gin-tools/validation -v -coverprofile=coverage.txt -covermode=count
