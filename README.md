@@ -1,6 +1,6 @@
 gin-tools
 =========
 
-[![Build Status](https://travis-ci.org/dogenzaka/gin-tools.svg?branch=master)](https://travis-ci.org/dogenzaka/gin-tools)
-[![codecov.io](https://codecov.io/github/dogenzaka/gin-tools/coverage.svg?branch=master)](https://codecov.io/github/dogenzaka/gin-tools?branch=master)
-[![License](http://img.shields.io/badge/license-MIT-red.svg?style=flat)](https://github.com/dogenzaka/rotator/blob/master/LICENSE)
+[![Build Status](http://img.shields.io/travis/dogenzaka/gin-tools.svg?style=flat)](https://travis-ci.org/dogenzaka/gin-tools)
+[![Coverage](http://img.shields.io/codecov/c/github/dogenzaka/gin-tools.svg?style=flat)](https://codecov.io/github/dogenzaka/gin-tools)
+[![License](http://img.shields.io/badge/license-MIT-red.svg?style=flat)](https://github.com/dogenzaka/gin-tools/blob/master/LICENSE)
