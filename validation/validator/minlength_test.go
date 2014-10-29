@@ -1,6 +1,5 @@
 package validator
 
-
 import (
 	"testing"
 
@@ -13,13 +12,13 @@ func TestMinLengthValidator(t *testing.T) {
 
 	Convey("When creating a MinLength validator", t, func() {
 		v := MinLength{threshold}
-		Convey("give 10 lengths paramater", func () {
+		Convey("give 10 lengths paramater", func() {
 			So(v.Validate("1234567890"), ShouldBeTrue)
 		})
-		Convey("give 9 lengths paramater", func () {
+		Convey("give 9 lengths paramater", func() {
 			So(v.Validate("123456789"), ShouldBeFalse)
 		})
-		Convey("give a 'empty' paramater", func () {
+		Convey("give a 'empty' paramater", func() {
 			So(v.Validate(""), ShouldBeFalse)
 		})
 	})

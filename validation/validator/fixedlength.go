@@ -12,10 +12,7 @@ type FixedLengthIfNotEmpty struct {
 
 // Validate ... validate param of fixed length
 func (f FixedLength) Validate(param string) bool {
-	if f.Fixed == len(param) {
-		return true
-	}
-	return false
+	return f.Fixed == len(param)
 }
 
 // Validate ... validate param of fixed length if not empty
@@ -25,8 +22,5 @@ func (f FixedLengthIfNotEmpty) Validate(param string) bool {
 		return true
 	}
 
-	if f.Fixed == len(param) {
-		return true
-	}
-	return false
+	return f.Fixed == len(param)
 }

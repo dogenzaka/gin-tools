@@ -7,8 +7,5 @@ type MaxLength struct {
 
 // Validate ... validate param of max length
 func (m MaxLength) Validate(param string) bool {
-	if len(param) > m.Max {
-		return false
-	}
-	return true
+	return !(len(param) > m.Max)
 }
