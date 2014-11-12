@@ -40,6 +40,9 @@ func TestEnumValidator(t *testing.T) {
 		Convey("give \"hogefuga\" paramater", func() {
 			So(v.Validate("hogefuga"), ShouldBeFalse)
 		})
+		Convey("give a empty paramater", func() {
+			So(v.Validate(""), ShouldBeTrue)
+		})
 	})
 
 }
