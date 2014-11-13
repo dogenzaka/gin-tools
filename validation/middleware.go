@@ -12,7 +12,12 @@ func ValidatePathParam(name string, vs ...Validator) gin.HandlerFunc {
 		p := c.Params.ByName(name)
 		for _, v := range vs {
 			if !v.Validate(p) {
-				c.AbortWithStatus(http.StatusBadRequest)
+				c.Abort()
+				c.JSON(http.StatusBadRequest, map[string]interface {}{
+						"code": "bad_request",
+						"message": "Bad Params",
+						"params": map[string]string{name: p},
+					})
 				return
 			}
 		}
@@ -25,7 +30,12 @@ func ValidateRequestParam(name string, vs ...Validator) gin.HandlerFunc {
 		p := c.Request.FormValue(name)
 		for _, v := range vs {
 			if !v.Validate(p) {
-				c.AbortWithStatus(http.StatusBadRequest)
+				c.Abort()
+				c.JSON(http.StatusBadRequest, map[string]interface {}{
+						"code": "bad_request",
+						"message": "Bad Params",
+						"params": map[string]string{name: p},
+					})
 				return
 			}
 		}
