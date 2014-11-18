@@ -49,7 +49,7 @@ func AccessLogger(out io.Writer) gin.HandlerFunc {
 }
 
 // ActivityLogger is a middleware for logging user action info
-func ActivityLogger(out io.Writer, getUserID func(c *gin.Context) (string, error)) gin.HandlerFunc {
+func ActivityLogger(out io.Writer, getExtra func(c *gin.Context) (interface{}, error)) gin.HandlerFunc {
 
 	if out == nil {
 		out = os.Stdout
@@ -80,16 +80,17 @@ func ActivityLogger(out io.Writer, getUserID func(c *gin.Context) (string, error
 		go func(ctx *gin.Context) {
 
 			al := activityLog{
-				logInfo: generateLogInfo(ctx, start),
+				logInfo:     generateLogInfo(ctx, start),
+				RequestBody: b,
 			}
 
-			// get to UserID
-			uid, err := getUserID(ctx)
-			if err != nil {
-				panic(err)
+			// get to Extra
+			if getExtra != nil {
+				al.Extra, err = getExtra(ctx)
+				if err != nil {
+					panic(err)
+				}
 			}
-			al.UserID = uid
-			al.RequestBody = b
 
 			bytes, err := json.Marshal(al)
 			if err != nil {

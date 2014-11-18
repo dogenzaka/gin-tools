@@ -6,8 +6,8 @@ type logInfo struct {
 	ClientIP    string        `json:"ip"`
 	Date        string        `json:"date"`
 	Method      string        `json:"method"`
-	Path        string        `json:"path"`
-	RawQuery    string        `json:"rawQuery,omitempty"`
+	RequestURI  string        `json:"uri"`
+	Referer     string        `json:"referer,omitempty"`
 	HTTPVersion string        `json:"httpVersion"`
 	Size        int           `json:"size"`
 	Status      int           `json:"status"`
@@ -22,6 +22,6 @@ type accessLog struct {
 
 type activityLog struct {
 	logInfo
-	UserID      string                 `json:"userId"`
-	RequestBody map[string]interface{} `json:"requestBody"`
+	RequestBody map[string]interface{} `json:"requestBody,omitempty"`
+	Extra       interface{}            `json:"extra,omitempty"`
 }

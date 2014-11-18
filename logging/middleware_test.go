@@ -1,13 +1,13 @@
 package logging
 
 import (
+	"bytes"
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
 	"sync"
 	"testing"
 	"time"
-	"bytes"
 
 	"github.com/gin-gonic/gin"
 
@@ -46,6 +46,7 @@ func TestAccessLogger(t *testing.T) {
 		req, _ := http.NewRequest("GET", "/test?test=true", nil)
 		req.Header.Set("X-Forwarded-For", "127.0.0.1")
 		req.Header.Set("User-Agent", "testAgent")
+		req.Header.Set("Referer", "testReferer")
 
 		w := httptest.NewRecorder()
 		r.ServeHTTP(w, req)
@@ -61,8 +62,8 @@ func TestAccessLogger(t *testing.T) {
 		So(al.ClientIP, ShouldEqual, req.Header.Get("X-Forwarded-For"))
 		So(t, ShouldHappenBefore, time.Now())
 		So(al.Method, ShouldEqual, req.Method)
-		So(al.Path, ShouldEqual, req.URL.Path)
-		So(al.RawQuery, ShouldEqual, req.URL.RawQuery)
+		So(al.RequestURI, ShouldEqual, req.URL.RequestURI())
+		So(al.Referer, ShouldEqual, req.Referer())
 		So(al.HTTPVersion, ShouldEqual, req.Proto)
 		So(al.Size, ShouldBeGreaterThan, 0)
 		So(al.Status, ShouldEqual, 200)
@@ -80,7 +81,7 @@ func TestActivityLogger(t *testing.T) {
 
 		wg := &sync.WaitGroup{}
 		d := &dummyLogFile{Wg: wg}
-		r.Use(ActivityLogger(d, func(_ *gin.Context) (string, error) {
+		r.Use(ActivityLogger(d, func(_ *gin.Context) (interface{}, error) {
 			return "testUserID", nil
 		}))
 
@@ -102,7 +103,6 @@ func TestActivityLogger(t *testing.T) {
 			wg.Wait()
 
 			So(d.Log, ShouldBeNil)
-
 		})
 
 		Convey("Given POST request", func() {
@@ -115,7 +115,7 @@ func TestActivityLogger(t *testing.T) {
 			b, err := json.Marshal(&body)
 			So(err, ShouldBeNil)
 
-			req, _ := http.NewRequest("POST", "/test", bytes.NewReader(b))
+			req, _ := http.NewRequest("POST", "/test?test=true", bytes.NewReader(b))
 			req.Header.Set("X-Forwarded-For", "127.0.0.1")
 			req.Header.Set("User-Agent", "testAgent")
 
@@ -134,15 +134,15 @@ func TestActivityLogger(t *testing.T) {
 			So(al.ClientIP, ShouldEqual, req.Header.Get("X-Forwarded-For"))
 			So(t, ShouldHappenBefore, time.Now())
 			So(al.Method, ShouldEqual, req.Method)
-			So(al.Path, ShouldEqual, req.URL.Path)
-			So(al.RawQuery, ShouldEqual, req.URL.RawQuery)
+			So(al.RequestURI, ShouldEqual, req.URL.RequestURI())
+			So(al.Referer, ShouldBeEmpty)
 			So(al.HTTPVersion, ShouldEqual, req.Proto)
 			So(al.Size, ShouldBeGreaterThan, 0)
 			So(al.Status, ShouldEqual, 200)
 			So(al.UserAgent, ShouldEqual, req.Header.Get("User-Agent"))
 			So(al.Latency, ShouldBeGreaterThan, 0)
-			So(al.UserID, ShouldEqual, "testUserID")
 			So(al.RequestBody["test"], ShouldBeTrue)
+			So(al.Extra, ShouldEqual, "testUserID")
 		})
 
 	})
