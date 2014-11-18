@@ -4,7 +4,7 @@ Logging
 ## Installation
 
 ```
-$ go get github.com/dogenzaka/gin-tools/Logging
+$ go get github.com/dogenzaka/gin-tools/logging
 ```
 
 ## Requirements

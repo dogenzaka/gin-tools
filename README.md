@@ -10,6 +10,7 @@ gin-tools is middlewares for [gin-gonic](http://gin-gonic.github.io/gin/)
 ## Middlewares
 
 - [Validation](https://github.com/dogenzaka/gin-tools/tree/master/validation)
+- [Logging](https://github.com/dogenzaka/gin-tools/tree/master/logging)
 
 ## License
 gin-tools is licensed under the MIT.
