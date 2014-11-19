@@ -2,7 +2,7 @@ package logging
 
 import "time"
 
-type logInfo struct {
+type LogInfo struct {
 	ClientIP    string        `json:"ip"`
 	Date        string        `json:"date"`
 	Method      string        `json:"method"`
@@ -15,13 +15,13 @@ type logInfo struct {
 	Latency     time.Duration `json:"latency"`
 }
 
-type accessLog struct {
-	logInfo
+type AccessLog struct {
+	LogInfo
 	Error error `json:"error,omitempty"`
 }
 
-type activityLog struct {
-	logInfo
+type ActivityLog struct {
+	LogInfo
 	RequestBody map[string]interface{} `json:"requestBody,omitempty"`
 	Extra       interface{}            `json:"extra,omitempty"`
 }

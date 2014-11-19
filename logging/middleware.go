@@ -34,8 +34,8 @@ func AccessLogger(out io.Writer) gin.HandlerFunc {
 
 		c.Next()
 
-		al := accessLog{
-			logInfo: GenerateLogInfo(c, start),
+		al := AccessLog{
+			LogInfo: GenerateLogInfo(c, start),
 		}
 
 		if err := c.LastError(); err != nil {
@@ -82,8 +82,8 @@ func ActivityLogger(out io.Writer, getExtra func(c *gin.Context) (interface{}, e
 			return
 		}
 
-		al := activityLog{
-			logInfo:     GenerateLogInfo(c, start),
+		al := ActivityLog{
+			LogInfo:     GenerateLogInfo(c, start),
 			RequestBody: b,
 		}
 

@@ -53,7 +53,7 @@ func TestAccessLogger(t *testing.T) {
 
 		wg.Wait()
 
-		var al accessLog
+		var al AccessLog
 		err := json.Unmarshal(d.Log, &al)
 		So(err, ShouldBeNil)
 		t, err := time.Parse(time.RFC3339, al.Date)
@@ -125,7 +125,7 @@ func TestActivityLogger(t *testing.T) {
 
 			wg.Wait()
 
-			var al activityLog
+			var al ActivityLog
 			err = json.Unmarshal(d.Log, &al)
 			So(err, ShouldBeNil)
 			t, err := time.Parse(time.RFC3339, al.Date)

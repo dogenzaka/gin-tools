@@ -9,8 +9,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func GenerateLogInfo(c *gin.Context, start time.Time) logInfo {
-	return logInfo{
+func GenerateLogInfo(c *gin.Context, start time.Time) LogInfo {
+	return LogInfo{
 		ClientIP:    c.ClientIP(),
 		Date:        start.Format(time.RFC3339),
 		Method:      c.Request.Method,
