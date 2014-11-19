@@ -30,6 +30,9 @@ func ConvertToMapFromBody(c *gin.Context) (m map[string]interface{}, err error) 
 		return
 	}
 	c.Request.Body = ioutil.NopCloser(bytes.NewBuffer(b))
-	err = json.Unmarshal(b, &m)
+
+	if len(b) != 0 {
+		err = json.Unmarshal(b, &m)
+	}
 	return
 }
