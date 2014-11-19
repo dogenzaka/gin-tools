@@ -10,6 +10,9 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// RecoverLoggingFailure is a recover when failed to logging
+var RecoverLoggingFailure func()
+
 // AccessLogger is a middleware for logging access info
 func AccessLogger(out io.Writer) gin.HandlerFunc {
 
@@ -21,30 +24,35 @@ func AccessLogger(out io.Writer) gin.HandlerFunc {
 
 	return func(c *gin.Context) {
 
+		if RecoverLoggingFailure != nil {
+			defer RecoverLoggingFailure()
+		}
+
 		start := time.Now()
 
 		c.Next()
 
-		go func(ctx *gin.Context) {
+		al := accessLog{
+			logInfo: generateLogInfo(c, start),
+		}
 
-			al := accessLog{
-				logInfo: generateLogInfo(ctx, start),
-			}
+		if err := c.LastError(); err != nil {
+			al.Error = err
+		}
 
-			if err := ctx.LastError(); err != nil {
-				al.Error = err
-			}
+		bytes, err := json.Marshal(al)
+		if err != nil {
+			panic(err)
+		}
 
-			bytes, err := json.Marshal(al)
-			if err != nil {
-				panic(err)
-			}
+		bytes = append(bytes, 10)
 
-			bytes = append(bytes, 10)
+		// Async write
+		go func() {
 			m.Lock()
 			defer m.Unlock()
 			out.Write(bytes)
-		}(c.Copy())
+		}()
 	}
 }
 
@@ -58,6 +66,10 @@ func ActivityLogger(out io.Writer, getExtra func(c *gin.Context) (interface{}, e
 	m := &sync.Mutex{}
 
 	return func(c *gin.Context) {
+
+		if RecoverLoggingFailure != nil {
+			defer RecoverLoggingFailure()
+		}
 
 		// check a request method
 		if c.Request.Method == "GET" {
@@ -77,30 +89,31 @@ func ActivityLogger(out io.Writer, getExtra func(c *gin.Context) (interface{}, e
 			return
 		}
 
-		go func(ctx *gin.Context) {
+		al := activityLog{
+			logInfo:     generateLogInfo(c, start),
+			RequestBody: b,
+		}
 
-			al := activityLog{
-				logInfo:     generateLogInfo(ctx, start),
-				RequestBody: b,
-			}
-
-			// get to Extra
-			if getExtra != nil {
-				al.Extra, err = getExtra(ctx)
-				if err != nil {
-					panic(err)
-				}
-			}
-
-			bytes, err := json.Marshal(al)
+		// get to Extra
+		if getExtra != nil {
+			al.Extra, err = getExtra(c)
 			if err != nil {
 				panic(err)
 			}
+		}
 
-			bytes = append(bytes, 10)
+		bytes, err := json.Marshal(al)
+		if err != nil {
+			panic(err)
+		}
+
+		bytes = append(bytes, 10)
+
+		// Async write
+		go func() {
 			m.Lock()
 			defer m.Unlock()
 			out.Write(bytes)
-		}(c.Copy())
+		}()
 	}
 }
