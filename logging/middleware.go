@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"io"
 	"os"
-	"sync"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -20,17 +19,15 @@ func AccessLogger(out io.Writer) gin.HandlerFunc {
 		out = os.Stdout
 	}
 
-	m := &sync.Mutex{}
-
 	return func(c *gin.Context) {
-
-		if RecoverLoggingFailure != nil {
-			defer RecoverLoggingFailure()
-		}
 
 		start := time.Now()
 
 		c.Next()
+
+		if RecoverLoggingFailure != nil {
+			defer RecoverLoggingFailure()
+		}
 
 		al := accessLog{
 			logInfo: generateLogInfo(c, start),
@@ -45,14 +42,7 @@ func AccessLogger(out io.Writer) gin.HandlerFunc {
 			panic(err)
 		}
 
-		bytes = append(bytes, 10)
-
-		// Async write
-		go func() {
-			m.Lock()
-			defer m.Unlock()
-			out.Write(bytes)
-		}()
+		out.Write(append(bytes, 10))
 	}
 }
 
@@ -63,13 +53,7 @@ func ActivityLogger(out io.Writer, getExtra func(c *gin.Context) (interface{}, e
 		out = os.Stdout
 	}
 
-	m := &sync.Mutex{}
-
 	return func(c *gin.Context) {
-
-		if RecoverLoggingFailure != nil {
-			defer RecoverLoggingFailure()
-		}
 
 		// check a request method
 		if c.Request.Method == "GET" {
@@ -83,6 +67,10 @@ func ActivityLogger(out io.Writer, getExtra func(c *gin.Context) (interface{}, e
 		}
 
 		c.Next()
+
+		if RecoverLoggingFailure != nil {
+			defer RecoverLoggingFailure()
+		}
 
 		// check a response status
 		if c.Writer.Status() < 200 || c.Writer.Status() > 299 {
@@ -107,13 +95,6 @@ func ActivityLogger(out io.Writer, getExtra func(c *gin.Context) (interface{}, e
 			panic(err)
 		}
 
-		bytes = append(bytes, 10)
-
-		// Async write
-		go func() {
-			m.Lock()
-			defer m.Unlock()
-			out.Write(bytes)
-		}()
+		out.Write(append(bytes, 10))
 	}
 }
