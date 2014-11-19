@@ -9,8 +9,13 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// RecoverLoggingFailure is a recover when failed to logging
-var RecoverLoggingFailure func()
+// recoverLoggingFailure is a recover when failed to logging
+var recoverLoggingFailure func()
+
+// SetRecoverLoggingFailure is a set recoverLoggingFailure
+func SetRecoverLoggingFailure(f func()) {
+	recoverLoggingFailure = f
+}
 
 // AccessLogger is a middleware for logging access info
 func AccessLogger(out io.Writer) gin.HandlerFunc {
@@ -21,13 +26,13 @@ func AccessLogger(out io.Writer) gin.HandlerFunc {
 
 	return func(c *gin.Context) {
 
+		if recoverLoggingFailure != nil {
+			defer recoverLoggingFailure()
+		}
+
 		start := time.Now()
 
 		c.Next()
-
-		if RecoverLoggingFailure != nil {
-			defer RecoverLoggingFailure()
-		}
 
 		al := accessLog{
 			logInfo: generateLogInfo(c, start),
@@ -55,6 +60,10 @@ func ActivityLogger(out io.Writer, getExtra func(c *gin.Context) (interface{}, e
 
 	return func(c *gin.Context) {
 
+		if recoverLoggingFailure != nil {
+			defer recoverLoggingFailure()
+		}
+
 		// check a request method
 		if c.Request.Method == "GET" {
 			return
@@ -67,10 +76,6 @@ func ActivityLogger(out io.Writer, getExtra func(c *gin.Context) (interface{}, e
 		}
 
 		c.Next()
-
-		if RecoverLoggingFailure != nil {
-			defer RecoverLoggingFailure()
-		}
 
 		// check a response status
 		if c.Writer.Status() < 200 || c.Writer.Status() > 299 {
