@@ -26,13 +26,13 @@ func AccessLogger(out io.Writer) gin.HandlerFunc {
 
 	return func(c *gin.Context) {
 
-		if recoverLoggingFailure != nil {
-			defer recoverLoggingFailure()
-		}
-
 		start := time.Now()
 
 		c.Next()
+
+		if recoverLoggingFailure != nil {
+			defer recoverLoggingFailure()
+		}
 
 		al := AccessLog{
 			LogInfo: GenerateLogInfo(c, start),
@@ -60,10 +60,6 @@ func ActivityLogger(out io.Writer, getExtra func(c *gin.Context) (interface{}, e
 
 	return func(c *gin.Context) {
 
-		if recoverLoggingFailure != nil {
-			defer recoverLoggingFailure()
-		}
-
 		// check a request method
 		if c.Request.Method == "GET" {
 			return
@@ -76,6 +72,10 @@ func ActivityLogger(out io.Writer, getExtra func(c *gin.Context) (interface{}, e
 		}
 
 		c.Next()
+
+		if recoverLoggingFailure != nil {
+			defer recoverLoggingFailure()
+		}
 
 		// check a response status
 		if c.Writer.Status() < 200 || c.Writer.Status() > 299 {
