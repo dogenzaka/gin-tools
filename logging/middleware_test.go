@@ -118,6 +118,7 @@ func TestActivityLogger(t *testing.T) {
 			req, _ := http.NewRequest("POST", "/test?test=true", bytes.NewReader(b))
 			req.Header.Set("X-Forwarded-For", "127.0.0.1")
 			req.Header.Set("User-Agent", "testAgent")
+			req.Header.Set("Content-Type", "application/json")
 
 			wg.Add(1)
 			w := httptest.NewRecorder()

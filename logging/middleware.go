@@ -66,9 +66,14 @@ func ActivityLogger(out io.Writer, getExtra func(c *gin.Context) (interface{}, e
 		}
 
 		start := time.Now()
-		b, err := ConvertToMapFromBody(c)
-		if err != nil {
-			panic(err)
+
+		var b map[string]interface {}
+		var err error
+		if c.Request.Header.Get("Content-Type") == "application/json" {
+			b, err = ConvertToMapFromBody(c)
+			if err != nil {
+				panic(err)
+			}
 		}
 
 		c.Next()
