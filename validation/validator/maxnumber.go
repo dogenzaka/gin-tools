@@ -2,18 +2,24 @@ package validator
 
 import "strconv"
 
-// MaxNumber validator is check a param less than max number
+// MaxNumber validator
 type MaxNumber struct {
 	Max int
 }
 
-// Validate for Validator interface
-func (m MaxNumber) Validate(param string) bool {
+// Check a param less than max number
+func (m MaxNumber) Check(param string) (int, bool) {
 
 	if isBlank(param) {
-		return true
+		return 0, true
 	}
 
 	v, err := strconv.Atoi(param)
-	return err == nil && !(v > m.Max)
+	return v, err == nil && !(v > m.Max)
+}
+
+// Validate for Validator interface
+func (m MaxNumber) Validate(param string) bool {
+	_, ok := m.Check(param)
+	return ok
 }

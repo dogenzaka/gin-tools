@@ -1,9 +1,15 @@
 package validator
 
-// NotBlank validator is check a param should not be blank
+// NotBlank validator
 type NotBlank struct{}
+
+// Check a param should not be blank
+func (e NotBlank) Check(param string) (string, bool) {
+	return param, !isBlank(param)
+}
 
 // Validate for Validator interface
 func (e NotBlank) Validate(param string) bool {
-	return !isBlank(param)
+	_, ok := e.Check(param)
+	return ok
 }

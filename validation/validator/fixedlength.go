@@ -1,16 +1,22 @@
 package validator
 
-// FixedLength validator is check a param equals fixed length
+// FixedLength validator
 type FixedLength struct {
 	Fixed int
 }
 
-// Validate for Validator interface
-func (f FixedLength) Validate(param string) bool {
+// Check a param equals fixed length
+func (f FixedLength) Check(param string) (string, bool) {
 
 	if isBlank(param) {
-		return true
+		return param, true
 	}
 
-	return f.Fixed == len(param)
+	return param, f.Fixed == len(param)
+}
+
+// Validate for Validator interface
+func (f FixedLength) Validate(param string) bool {
+	_, ok := f.Check(param)
+	return ok
 }

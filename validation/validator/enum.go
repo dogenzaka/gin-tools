@@ -1,22 +1,28 @@
 package validator
 
-// Enum validator is check a param is included in Enums
+// Enum validator
 type Enum struct {
 	Enums []string
 }
 
-// Validate for Validator interface
-func (e Enum) Validate(param string) bool {
+// Check a param is included in Enums
+func (e Enum) Check(param string) (string, bool) {
 
 	if isBlank(param) {
-		return true
+		return param, true
 	}
 
 	for _, enum := range e.Enums {
 		if param == enum {
-			return true
+			return param, true
 		}
 	}
 
-	return false
+	return param, false
+}
+
+// Validate for Validator interface
+func (e Enum) Validate(param string) bool {
+	_, ok := e.Check(param)
+	return ok
 }

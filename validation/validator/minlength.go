@@ -1,16 +1,22 @@
 package validator
 
-// MinLength validator is check a param greater than min length
+// MinLength validator
 type MinLength struct {
 	Min int
 }
 
-// Validate : param of min length
-func (m MinLength) Validate(param string) bool {
+// Check a param greater than min length
+func (m MinLength) Check(param string) (string, bool) {
 
 	if isBlank(param) {
-		return true
+		return param, true
 	}
 
-	return !(len(param) < m.Min)
+	return param, !(len(param) < m.Min)
+}
+
+// Validate for validator interface
+func (m MinLength) Validate(param string) bool {
+	_, ok := m.Check(param)
+	return ok
 }

@@ -9,7 +9,7 @@ import (
 func TestNumberValidator(t *testing.T) {
 
 	Convey("When creating a positive number validator", t, func() {
-		v := PNumber{}
+		v := UInt{}
 		Convey("give a positive paramater", func() {
 			So(v.Validate("1"), ShouldBeTrue)
 		})

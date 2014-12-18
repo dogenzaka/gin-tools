@@ -8,13 +8,19 @@ type Time struct {
 }
 
 // Validate for Validator interface
-func (t Time) Validate(param string) bool {
+func (t Time) Check(param string) (time.Time, bool) {
 
 	if isBlank(param) {
-		return true
+		return time.Time{}, true
 	}
 
-	_, err := time.Parse(t.Format, param)
+	v, err := time.Parse(t.Format, param)
 
-	return err == nil
+	return v, err == nil
+}
+
+// Validate for Validator interface
+func (t Time) Validate(param string) bool {
+	_, ok := t.Check(param)
+	return ok
 }

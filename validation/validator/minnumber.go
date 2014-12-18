@@ -2,18 +2,24 @@ package validator
 
 import "strconv"
 
-// MinNumber validator is check a param greater than min number
+// MinNumber validator
 type MinNumber struct {
 	Min int
 }
 
-// Validate for Validator interface
-func (m MinNumber) Validate(param string) bool {
+// Check a param greater than min number
+func (m MinNumber) Check(param string) (int, bool) {
 
 	if isBlank(param) {
-		return true
+		return 0, true
 	}
 
 	v, err := strconv.Atoi(param)
-	return err == nil && !(v < m.Min)
+	return v, err == nil && !(v < m.Min)
+}
+
+// Validate for Validator interface
+func (m MinNumber) Validate(param string) bool {
+	_, ok := m.Check(param)
+	return ok
 }
