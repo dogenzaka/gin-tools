@@ -30,4 +30,29 @@ func TestTimeValidator(t *testing.T) {
 		})
 	})
 
+	Convey("When creating a UnixTime validator", t, func() {
+		v := UnixTime{}
+		Convey("give '-10000' paramater", func() {
+			So(v.Validate("-10000"), ShouldBeFalse)
+		})
+		Convey("give '-1' paramater", func() {
+			So(v.Validate("-1"), ShouldBeFalse)
+		})
+		Convey("give '0' paramater", func() {
+			So(v.Validate("0"), ShouldBeTrue)
+		})
+		Convey("give '1' paramater", func() {
+			So(v.Validate("1"), ShouldBeTrue)
+		})
+		Convey("give '1392899576' paramater", func() {
+			So(v.Validate("1392899576"), ShouldBeTrue)
+		})
+		Convey("give '1392899576000' paramater", func() {
+			So(v.Validate("1392899576000"), ShouldBeTrue)
+		})
+		Convey("give empty paramater", func() {
+			So(v.Validate(""), ShouldBeTrue)
+		})
+	})
+
 }

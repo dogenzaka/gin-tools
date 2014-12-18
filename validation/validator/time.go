@@ -1,13 +1,19 @@
 package validator
 
-import "time"
+import (
+	"strconv"
+	"time"
+)
 
 // Time validator is check a param should be obey by format
 type Time struct {
 	Format string
 }
 
-// Validate for Validator interface
+// UnixTime validator is check a param
+type UnixTime struct{}
+
+// Check Validate for Validator interface
 func (t Time) Check(param string) (time.Time, bool) {
 
 	if isBlank(param) {
@@ -19,8 +25,27 @@ func (t Time) Check(param string) (time.Time, bool) {
 	return v, err == nil
 }
 
+// CheckUnixTime Validate for Validator interface
+func (ut UnixTime) CheckUnixTime(param string) (int64, bool) {
+
+	if isBlank(param) {
+		return 0, true
+	}
+
+	v, err := strconv.ParseInt(param, 10, 64)
+
+	//Allow since '1970-01-01T00:00:00Z'
+	return v, err == nil && v >= 0
+}
+
 // Validate for Validator interface
 func (t Time) Validate(param string) bool {
 	_, ok := t.Check(param)
+	return ok
+}
+
+// Validate for Validator interface
+func (ut UnixTime) Validate(param string) bool {
+	_, ok := ut.CheckUnixTime(param)
 	return ok
 }
