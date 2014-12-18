@@ -20,23 +20,8 @@ func TestObjectIDValidator(t *testing.T) {
 			So(v.Validate("507f191e810c19729de860ev"), ShouldBeFalse)
 		})
 		Convey("give a 'empty' paramater", func() {
-			So(v.Validate(""), ShouldBeFalse)
-		})
-	})
-
-	Convey("When creating a ObjectID not if empty validator", t, func() {
-		v := ObjectIDIfNotEmpty{}
-		Convey("give a ObjectID paramater", func() {
-			So(v.Validate("507f191e810c19729de860ea"), ShouldBeTrue)
-		})
-		Convey("give a NOT ObjectID paramater (short)", func() {
-			So(v.Validate("507f191e810c1972"), ShouldBeFalse)
-		})
-		Convey("give a NOT ObjectID paramater (long)", func() {
-			So(v.Validate("507f191e810c19729de860ev"), ShouldBeFalse)
-		})
-		Convey("give a 'empty' paramater", func() {
 			So(v.Validate(""), ShouldBeTrue)
 		})
 	})
+
 }

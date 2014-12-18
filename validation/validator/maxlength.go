@@ -1,11 +1,22 @@
 package validator
 
-// MaxLength ... check max length
+// MaxLength validator
 type MaxLength struct {
 	Max int
 }
 
-// Validate ... validate param of max length
+// Check a param is less than max length
+func (m MaxLength) Check(param string) (string, bool) {
+
+	if isBlank(param) {
+		return param, true
+	}
+
+	return param, !(len(param) > m.Max)
+}
+
+// Validate for Validator interface
 func (m MaxLength) Validate(param string) bool {
-	return !(len(param) > m.Max)
+	_, ok := m.Check(param)
+	return ok
 }

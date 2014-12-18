@@ -19,7 +19,8 @@ func TestMinLengthValidator(t *testing.T) {
 			So(v.Validate("123456789"), ShouldBeFalse)
 		})
 		Convey("give a 'empty' paramater", func() {
-			So(v.Validate(""), ShouldBeFalse)
+			So(v.Validate(""), ShouldBeTrue)
 		})
 	})
+
 }

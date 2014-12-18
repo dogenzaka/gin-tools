@@ -24,23 +24,7 @@ func TestEnumValidator(t *testing.T) {
 		Convey("give \"hogefuga\" paramater", func() {
 			So(v.Validate("hogefuga"), ShouldBeFalse)
 		})
-	})
-
-	Convey("When creating a EnumIfNotEmpty validator", t, func() {
-		v := EnumIfNotEmpty{enums}
-		Convey("give \"hoge\" paramater", func() {
-			So(v.Validate("hoge"), ShouldBeTrue)
-		})
-		Convey("give \"fuga\" paramater", func() {
-			So(v.Validate("fuga"), ShouldBeTrue)
-		})
-		Convey("give \"foo\" paramater", func() {
-			So(v.Validate("foo"), ShouldBeFalse)
-		})
-		Convey("give \"hogefuga\" paramater", func() {
-			So(v.Validate("hogefuga"), ShouldBeFalse)
-		})
-		Convey("give a empty paramater", func() {
+		Convey("give \"empty\" paramater", func() {
 			So(v.Validate(""), ShouldBeTrue)
 		})
 	})

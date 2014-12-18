@@ -2,27 +2,23 @@ package validator
 
 import "strconv"
 
-// Bool ... check bool
-type Bool struct {
-}
+// Bool validator
+type Bool struct{}
 
-// BoolIfNotEmpty ... check bool if not empty
-type BoolIfNotEmpty struct {
-}
+// Check a param is bool variable
+func (b Bool) Check(param string) (bool, bool) {
 
-// Validate ... validate param of bool
-func (b Bool) Validate(param string) bool {
-	_, err := strconv.ParseBool(param)
-	return err == nil
-}
-
-// Validate ... validate param of bool if not empty
-func (b BoolIfNotEmpty) Validate(param string) bool {
-
-	if param == "" {
-		return true
+	if isBlank(param) {
+		return false, true
 	}
 
-	_, err := strconv.ParseBool(param)
-	return err == nil
+	v, err := strconv.ParseBool(param)
+
+	return v, err == nil
+}
+
+// Validate for Validator interface
+func (b Bool) Validate(param string) bool {
+	_, ok := b.Check(param)
+	return ok
 }

@@ -2,27 +2,23 @@ package validator
 
 import "strconv"
 
-// PNumber ... check a positive number
-type PNumber struct {
-}
+// UInt validator
+type UInt struct{}
 
-// PNumberIfNotEmpty ... check a positive number if not empty
-type PNumberIfNotEmpty struct {
-}
+// Check a param is unsigned integer
+func (u UInt) Check(param string) (int, bool) {
 
-// Validate ... validate param for a positive number
-func (p PNumber) Validate(param string) bool {
-	v, err := strconv.Atoi(param)
-	return err == nil && v > 0
-}
-
-// Validate ... validate param for a positive number if not empty
-func (p PNumberIfNotEmpty) Validate(param string) bool {
-
-	if param == "" {
-		return true
+	if isBlank(param) {
+		return 0, true
 	}
 
 	v, err := strconv.Atoi(param)
-	return err == nil && v > 0
+
+	return v, err == nil && v > 0
+}
+
+// Validate for Validator interface
+func (u UInt) Validate(param string) bool {
+	_, ok := u.Check(param)
+	return ok
 }
