@@ -74,7 +74,7 @@ func TestRegExpValidator(t *testing.T) {
 	})
 
 	Convey("When creating a Url validator", t, func() {
-		v := Url{}
+		v := URL{}
 		Convey("give 'http://hoge.co.jp' paramater", func() {
 			So(v.Validate("http://hoge.co.jp"), ShouldBeTrue)
 		})
