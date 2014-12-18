@@ -2,29 +2,19 @@ package validator
 
 import "time"
 
-// Time ... check time
+// Time validator is check a param should be obey by format
 type Time struct {
 	Format string
 }
 
-// TimeIfNotEmpty ... check time if not empty
-type TimeIfNotEmpty struct {
-	Format string
-}
-
-// Validate ... validate param of objectID
+// Validate for Validator interface
 func (t Time) Validate(param string) bool {
-	_, err := time.Parse(t.Format, param)
-	return err == nil
-}
 
-// Validate ... validate param of objectID if not empty
-func (t TimeIfNotEmpty) Validate(param string) bool {
-
-	if param == "" {
+	if isBlank(param) {
 		return true
 	}
 
 	_, err := time.Parse(t.Format, param)
+
 	return err == nil
 }

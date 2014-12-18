@@ -1,6 +1,6 @@
 package validation
 
-// Validator .. validator interface
+// Validator interface provides a "Validate" method
 type Validator interface {
 	Validate(param string) bool
 }

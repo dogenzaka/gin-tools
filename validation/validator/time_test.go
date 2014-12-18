@@ -25,23 +25,7 @@ func TestTimeValidator(t *testing.T) {
 		Convey("give \"hoge\" paramater", func() {
 			So(v.Validate("hoge"), ShouldBeFalse)
 		})
-	})
-
-	Convey("When creating a TimeIfNotEmpty validator", t, func() {
-		v := TimeIfNotEmpty{format}
-		Convey("give \"2014-11-10T11:56:00+09:00\" paramater", func() {
-			So(v.Validate("2014-11-10T11:56:00+09:00"), ShouldBeTrue)
-		})
-		Convey("give \"2014-11-10T11:56:00Z\" paramater", func() {
-			So(v.Validate("2014-11-10T11:56:00Z"), ShouldBeTrue)
-		})
-		Convey("give \"2014/11/10 11:56:00\" paramater", func() {
-			So(v.Validate("2014/11/10 11:56:00"), ShouldBeFalse)
-		})
-		Convey("give \"hoge\" paramater", func() {
-			So(v.Validate("hoge"), ShouldBeFalse)
-		})
-		Convey("give an empty paramater", func() {
+		Convey("give \"\" paramater", func() {
 			So(v.Validate(""), ShouldBeTrue)
 		})
 	})
