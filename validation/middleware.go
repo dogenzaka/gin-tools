@@ -14,8 +14,8 @@ func ValidatePathParam(name string, vs ...Validator) gin.HandlerFunc {
 			if !v.Validate(p) {
 				c.Abort()
 				c.JSON(http.StatusBadRequest, map[string]interface{}{
-					"code":    "bad_request",
-					"message": "bad Params",
+					"code":    "bad_params",
+					"message": "bad params",
 					"params":  map[string]string{name: p},
 				})
 				return
@@ -32,8 +32,8 @@ func ValidateRequestParam(name string, vs ...Validator) gin.HandlerFunc {
 			if !v.Validate(p) {
 				c.Abort()
 				c.JSON(http.StatusBadRequest, map[string]interface{}{
-					"code":    "bad_request",
-					"message": "bad Params",
+					"code":    "bad_params",
+					"message": "bad params",
 					"params":  map[string]string{name: p},
 				})
 				return
