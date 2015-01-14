@@ -1,4 +1,4 @@
-// this gzip middleware comes from github.com/gin-gonic/contrib/gzip
+// Package gzip middleware comes from github.com/gin-gonic/contrib/gzip
 // Fixed response writer issue
 package gzip
 
@@ -9,10 +9,14 @@ import (
 )
 
 const (
-	BestCompression    = gogzip.BestCompression
-	BestSpeed          = gogzip.BestSpeed
+	// BestCompression delegates from BestCompression of compress/gzip
+	BestCompression = gogzip.BestCompression
+	// BestSpeed delegates from BestSpeed of compress/gzip
+	BestSpeed = gogzip.BestSpeed
+	// DefaultCompression delegates from DefaultCompression of compress/gzip
 	DefaultCompression = gogzip.DefaultCompression
-	NoCompression      = gogzip.NoCompression
+	// NoCompression delegates from NoCompression of compress/gzip
+	NoCompression = gogzip.NoCompression
 
 	headerAcceptEncoding  = "Accept-Encoding"
 	headerContentEncoding = "Content-Encoding"
@@ -35,6 +39,7 @@ func (g *gzipWriter) Write(data []byte) (int, error) {
 	return g.gzwriter.Write(data)
 }
 
+// Gzip compresses a response of http
 func Gzip(level int) gin.HandlerFunc {
 
 	return func(c *gin.Context) {

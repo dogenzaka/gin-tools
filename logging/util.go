@@ -9,6 +9,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// GenerateLogInfo generates base log information
 func GenerateLogInfo(c *gin.Context, start time.Time) LogInfo {
 	return LogInfo{
 		ClientIP:    c.ClientIP(),
@@ -24,6 +25,7 @@ func GenerateLogInfo(c *gin.Context, start time.Time) LogInfo {
 	}
 }
 
+// ConvertToMapFromBody converts to a map from a request body
 func ConvertToMapFromBody(c *gin.Context) (m map[string]interface{}, err error) {
 	b, err := ioutil.ReadAll(c.Request.Body)
 	if err != nil {
