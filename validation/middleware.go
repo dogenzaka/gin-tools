@@ -41,3 +41,21 @@ func ValidateRequestParam(name string, vs ...Validator) gin.HandlerFunc {
 		}
 	}
 }
+
+// ValidateRequestHeader validate for request header
+func ValidateRequestHeader(name string, vs ...Validator) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		p := c.Request.Header.Get(name)
+		for _, v := range vs {
+			if !v.Validate(p) {
+				c.Abort()
+				c.JSON(http.StatusBadRequest, map[string]interface{}{
+					"code":    "bad_params",
+					"message": "bad params",
+					"params":  map[string]string{name: p},
+				})
+				return
+			}
+		}
+	}
+}
