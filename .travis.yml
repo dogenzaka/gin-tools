@@ -7,13 +7,19 @@ before_install:
   - sudo pip install codecov
 
 install:
+  - go get golang.org/x/tools/cmd/vet
   - go get golang.org/x/tools/cmd/cover
+  - go get github.com/golang/lint/golint
   - go get github.com/smartystreets/goconvey
   - go get github.com/gin-gonic/gin
+
+before_script:
+  - go vet ./...
+  - golint ./... | xargs -r false
 
 script:
   - ./coverage.sh
 
 after_success:
+  - go install ./...
   - codecov
-
