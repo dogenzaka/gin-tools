@@ -17,7 +17,7 @@ func TestNumberValidator(t *testing.T) {
 			So(v.Validate("-1"), ShouldBeFalse)
 		})
 		Convey("give a zero paramater", func() {
-			So(v.Validate("0"), ShouldBeFalse)
+			So(v.Validate("0"), ShouldBeTrue)
 		})
 		Convey("give a 'empty' paramater", func() {
 			So(v.Validate(""), ShouldBeTrue)
