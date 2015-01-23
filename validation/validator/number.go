@@ -14,7 +14,7 @@ func (u UInt) Check(param string) (int, bool) {
 
 	v, err := strconv.Atoi(param)
 
-	return v, err == nil && v > 0
+	return v, err == nil && v >= 0
 }
 
 // Validate for Validator interface
