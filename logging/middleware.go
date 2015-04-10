@@ -10,10 +10,10 @@ import (
 )
 
 // recoverLoggingFailure is a recover when failed to logging
-var recoverLoggingFailure func()
+var recoverLoggingFailure func(c *gin.Context)
 
 // SetRecoverLoggingFailure is a set recoverLoggingFailure
-func SetRecoverLoggingFailure(f func()) {
+func SetRecoverLoggingFailure(f func(c *gin.Context)) {
 	recoverLoggingFailure = f
 }
 
@@ -31,7 +31,7 @@ func AccessLogger(out io.Writer) gin.HandlerFunc {
 		c.Next()
 
 		if recoverLoggingFailure != nil {
-			defer recoverLoggingFailure()
+			defer recoverLoggingFailure(c)
 		}
 
 		al := AccessLog{
@@ -52,7 +52,7 @@ func AccessLogger(out io.Writer) gin.HandlerFunc {
 }
 
 // ActivityLogger is a middleware for logging user action info
-func ActivityLogger(out io.Writer, getExtra func(c *gin.Context) (interface{}, error)) gin.HandlerFunc {
+func ActivityLogger(out io.Writer, getExtra func(c *gin.Context) (string, error)) gin.HandlerFunc {
 
 	if out == nil {
 		out = os.Stdout
@@ -67,19 +67,22 @@ func ActivityLogger(out io.Writer, getExtra func(c *gin.Context) (interface{}, e
 
 		start := time.Now()
 
-		var b map[string]interface {}
-		var err error
-		if c.Request.Header.Get("Content-Type") == "application/json" {
-			b, err = ConvertToMapFromBody(c)
+		var s string
+		func() {
+			if recoverLoggingFailure != nil {
+				defer recoverLoggingFailure(c)
+			}
+			var err error
+			s, err = ConvertToMapFromBody(c)
 			if err != nil {
 				panic(err)
 			}
-		}
+		}()
 
 		c.Next()
 
 		if recoverLoggingFailure != nil {
-			defer recoverLoggingFailure()
+			defer recoverLoggingFailure(c)
 		}
 
 		// check a response status
@@ -89,10 +92,11 @@ func ActivityLogger(out io.Writer, getExtra func(c *gin.Context) (interface{}, e
 
 		al := ActivityLog{
 			LogInfo:     GenerateLogInfo(c, start),
-			RequestBody: b,
+			RequestBody: s,
 		}
 
 		// get to Extra
+		var err error
 		if getExtra != nil {
 			al.Extra, err = getExtra(c)
 			if err != nil {

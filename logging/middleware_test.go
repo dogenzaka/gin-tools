@@ -81,7 +81,7 @@ func TestActivityLogger(t *testing.T) {
 
 		wg := &sync.WaitGroup{}
 		d := &dummyLogFile{Wg: wg}
-		r.Use(ActivityLogger(d, func(_ *gin.Context) (interface{}, error) {
+		r.Use(ActivityLogger(d, func(_ *gin.Context) (string, error) {
 			return "testUserID", nil
 		}))
 
@@ -142,7 +142,7 @@ func TestActivityLogger(t *testing.T) {
 			So(al.Status, ShouldEqual, 200)
 			So(al.UserAgent, ShouldEqual, req.Header.Get("User-Agent"))
 			So(al.Latency, ShouldBeGreaterThan, 0)
-			So(al.RequestBody["test"], ShouldBeTrue)
+			So(al.RequestBody, ShouldEqual, "{\"test\": true}")
 			So(al.Extra, ShouldEqual, "testUserID")
 		})
 
