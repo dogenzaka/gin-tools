@@ -25,6 +25,6 @@ type AccessLog struct {
 // ActivityLog is a log information of user action
 type ActivityLog struct {
 	LogInfo
-	RequestBody map[string]interface{} `json:"requestBody,omitempty"`
-	Extra       interface{}            `json:"extra,omitempty"`
+	RequestBody string `json:"requestBody,omitempty"`
+	Extra       string `json:"extra,omitempty"`
 }

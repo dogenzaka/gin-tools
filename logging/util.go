@@ -5,7 +5,6 @@ import (
 	"io/ioutil"
 	"time"
 
-	"encoding/json"
 	"github.com/gin-gonic/gin"
 )
 
@@ -26,7 +25,8 @@ func GenerateLogInfo(c *gin.Context, start time.Time) LogInfo {
 }
 
 // ConvertToMapFromBody converts to a map from a request body
-func ConvertToMapFromBody(c *gin.Context) (m map[string]interface{}, err error) {
+func ConvertToMapFromBody(c *gin.Context) (s string, err error) {
+
 	b, err := ioutil.ReadAll(c.Request.Body)
 	if err != nil {
 		return
@@ -34,7 +34,7 @@ func ConvertToMapFromBody(c *gin.Context) (m map[string]interface{}, err error) 
 	c.Request.Body = ioutil.NopCloser(bytes.NewBuffer(b))
 
 	if len(b) != 0 {
-		err = json.Unmarshal(b, &m)
+		s = string(b)
 	}
 	return
 }
