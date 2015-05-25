@@ -38,7 +38,7 @@ func AccessLogger(out io.Writer) gin.HandlerFunc {
 			LogInfo: GenerateLogInfo(c, start),
 		}
 
-		if err := c.LastError(); err != nil {
+		if err := c.Err(); err != nil {
 			al.Error = err
 		}
 
