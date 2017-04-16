@@ -14,7 +14,7 @@ func ValidatePathParam(name string, vs ...Validator) gin.HandlerFunc {
 		p := c.Params.ByName(name)
 		for _, v := range vs {
 			if !v.Validate(p) {
-				c.Abort()
+				c.Abort(http.StatusBadRequest)
 				c.JSON(http.StatusBadRequest, map[string]interface{}{
 					"code":    "bad_params",
 					"message": "bad params",
@@ -32,7 +32,7 @@ func ValidateRequestParam(name string, vs ...Validator) gin.HandlerFunc {
 		p := c.Request.FormValue(name)
 		for _, v := range vs {
 			if !v.Validate(p) {
-				c.Abort()
+				c.Abort(http.StatusBadRequest)
 				c.JSON(http.StatusBadRequest, map[string]interface{}{
 					"code":    "bad_params",
 					"message": "bad params",
@@ -50,7 +50,7 @@ func ValidateRequestHeader(name string, vs ...Validator) gin.HandlerFunc {
 		h := c.Request.Header.Get(name)
 		for _, v := range vs {
 			if !v.Validate(h) {
-				c.Abort()
+				c.Abort(http.StatusBadRequest)
 				c.JSON(http.StatusBadRequest, map[string]interface{}{
 					"code":    "bad_params",
 					"message": "bad params",
@@ -67,7 +67,7 @@ func ValidateRequestBody(vs ...Validator) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		b, err := ioutil.ReadAll(c.Request.Body)
 		if err != nil {
-			c.Abort()
+			c.Abort(http.StatusBadRequest)
 			c.JSON(http.StatusBadRequest, map[string]interface{}{
 				"code":    "bad_params",
 				"message": "bad params",
@@ -78,7 +78,7 @@ func ValidateRequestBody(vs ...Validator) gin.HandlerFunc {
 		c.Request.Body = ioutil.NopCloser(bytes.NewBuffer(b))
 		for _, v := range vs {
 			if !v.Validate(string(b)) {
-				c.Abort()
+				c.Abort(http.StatusBadRequest)
 				c.JSON(http.StatusBadRequest, map[string]interface{}{
 					"code":    "bad_params",
 					"message": "bad params",
